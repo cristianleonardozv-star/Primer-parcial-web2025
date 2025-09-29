@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - UFPS</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="login-container">
+    <!-- Logo UFPS -->
+    <img src="logoUFPS.png" alt="Logo UFPS">
+
+    <form id="loginForm">
+      <label for="codigo">Código de Estudiante</label>
+      <input type="text" id="codigo" name="codigo" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit" class="btn">Ingresar</button>
+    </form>
+
+    <p id="errorMsg" class="error"></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
