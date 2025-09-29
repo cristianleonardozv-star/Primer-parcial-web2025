@@ -1,0 +1,26 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.login-container {
+  max-width: 400px;
+  width: 100%;
+}
+
+.logo-ufps {
+  max-width: 280px;  /* Ajusta el tamaño del logo */
+}
+
+.btn-ufps {
+  background-color: #D31024;
+  color: white;
+  font-size: 16px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 0 0 0 20px; /* curva inferior izquierda */
+}
+
+.btn-ufps:hover {
+  background-color: #a50c1c;
+}

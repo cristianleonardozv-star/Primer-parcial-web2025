@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notas - UFPS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-white">
+
+  <div class="container my-4">
+    <div class="text-center mb-4">
+      <img src="logoUFPS.png" alt="UFPS Logo" class="img-fluid" style="max-width:250px;">
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <p><strong>Código:</strong> <span id="codigo"></span></p>
+        <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+      </div>
+      <div class="text-center border p-2">
+        <p class="mb-1"><strong>Promedio</strong></p>
+        <h4 id="promedio">0.00</h4>
+      </div>
+    </div>
+
+    <h6 class="text-center text-danger mb-3">Relación de asignaturas cursadas</h6>
+
+    <table class="table table-bordered text-center align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Asignatura</th>
+          <th>Cre</th>
+          <th>P1</th>
+          <th>P2</th>
+          <th>P3</th>
+          <th>EF</th>
+          <th>DEF</th>
+        </tr>
+      </thead>
+      <tbody id="tablaNotas"></tbody>
+    </table>
+
+    <div class="text-center mt-4">
+      <button id="logout" class="btn-logout">Cerrar Sesión</button>
+    </div>
+  </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
+    if (!usuario) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    document.getElementById("codigo").textContent = usuario.codigo;
+    document.getElementById("nombre").textContent = usuario.nombre;
+
+    try {
+      const response = await fetch(`https://24a0dac0-2579-4138-985c-bec2df4bdfcc-00-3unzo70c406dl.riker.replit.dev/students/${usuario.codigo}/notas`);
+      const data = await response.json();
+
+      if (!data.notas) {
+        alert("No se encontraron notas para este estudiante");
+        return;
+      }
+
+      const asignaturas = data.notas; 
+      let totalCreditos = 0;
+      let sumaPonderada = 0;
+
+      const tbody = document.getElementById("tablaNotas");
+      tbody.innerHTML = "";
+
+      asignaturas.forEach(asig => {
+        const creditos = Number(asig.creditos);
+        const n1 = Number(asig.n1);
+        const n2 = Number(asig.n2);
+        const n3 = Number(asig.n3);
+        const ex = Number(asig.ex);
+
+        const def = (((n1 + n2 + n3) / 3) * 0.7) + (ex * 0.3);
+
+        sumaPonderada += def * creditos;
+        totalCreditos += creditos;
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${asig.asignatura}</td>
+            <td>${creditos}</td>
+            <td>${n1}</td>
+            <td>${n2}</td>
+            <td>${n3}</td>
+            <td>${ex}</td>
+            <td>${def.toFixed(1)}</td>
+          </tr>
+        `;
+      });
+
+      const promedio = sumaPonderada / totalCreditos;
+      document.getElementById("promedio").textContent = promedio.toFixed(2);
+
+    } catch (error) {
+      alert("Error al cargar las notas.");
+    }
+
+    document.getElementById("logout").addEventListener("click", () => {
+      localStorage.removeItem("usuario");
+      window.location.href = "index.html";
+    });
+  });
+</script>
+
+</body>
+</html>
